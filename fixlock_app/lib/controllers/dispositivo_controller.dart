@@ -83,9 +83,19 @@ class DispositivoController extends GetxController {
     }else {
       if (_connection!.isConnected) {
         try {
-          var list = Uint8List.fromList(utf8.encode(codCliente));
-          _connection!.output.add(list);
-          await _connection!.output.allSent;
+          List<String> commands = [codCliente[0], codCliente[1], codCliente[2], codCliente[3], codCliente[4], codCliente[5]];
+
+          //commands = ['*', 'f', 'b', 'd', 't', 'a'];
+          Future.forEach<String>(commands, (command) async {
+            var list = Uint8List.fromList(utf8.encode(command));
+            _connection!.output.add(list);
+            await _connection!.output.allSent;
+            print(command);
+            await Future.delayed(const Duration(milliseconds: 200));
+
+          });
+
+
         } catch (exp) {
           _connection = null;
           await FlutterBluetoothSerial.instance.requestDisable();
@@ -107,6 +117,7 @@ class DispositivoController extends GetxController {
     }
   }
 
+
   Future<void> ligarEnergia(String deviceId) async {
 
     String? codCliente = "*${userController.userModel.value.clienteCodigo}r";
@@ -117,9 +128,17 @@ class DispositivoController extends GetxController {
     }else {
       if (_connection!.isConnected) {
         try {
-          var list = Uint8List.fromList(utf8.encode(codCliente));
-          _connection!.output.add(list);
-          await _connection!.output.allSent;
+          List<String> commands = [codCliente[0], codCliente[1], codCliente[2], codCliente[3], codCliente[4], codCliente[5]];
+
+          //commands = ['*', 'f', 'b', 'd', 't', 'r'];
+          Future.forEach<String>(commands, (command) async {
+            var list = Uint8List.fromList(utf8.encode(command));
+            _connection!.output.add(list);
+            await _connection!.output.allSent;
+            print(command);
+            await Future.delayed(const Duration(milliseconds: 200));
+
+          });
         } catch (exp) {
           _connection = null;
           await FlutterBluetoothSerial.instance.requestDisable();
@@ -127,7 +146,7 @@ class DispositivoController extends GetxController {
               snackPosition: SnackPosition.BOTTOM,
               duration: const Duration(seconds: 4));
           await connect(deviceId);
-          await abrir(deviceId);
+          await ligarEnergia(deviceId);
         }
       } else {
         _connection = null;
@@ -136,7 +155,7 @@ class DispositivoController extends GetxController {
             snackPosition: SnackPosition.BOTTOM,
             duration: const Duration(seconds: 4));
         await connect(deviceId);
-        await abrir(deviceId);
+        await ligarEnergia(deviceId);
       }
     }
   }
@@ -151,9 +170,17 @@ class DispositivoController extends GetxController {
     }else {
       if (_connection!.isConnected) {
         try {
-          var list = Uint8List.fromList(utf8.encode(codCliente));
-          _connection!.output.add(list);
-          await _connection!.output.allSent;
+          List<String> commands = [codCliente[0], codCliente[1], codCliente[2], codCliente[3], codCliente[4], codCliente[5]];
+
+          //commands = ['*', 'f', 'b', 'd', 't', 'd'];
+          Future.forEach<String>(commands, (command) async {
+            var list = Uint8List.fromList(utf8.encode(command));
+            _connection!.output.add(list);
+            await _connection!.output.allSent;
+            print(command);
+            await Future.delayed(const Duration(milliseconds: 200));
+
+          });
         } catch (exp) {
           _connection = null;
           await FlutterBluetoothSerial.instance.requestDisable();
@@ -161,7 +188,7 @@ class DispositivoController extends GetxController {
               snackPosition: SnackPosition.BOTTOM,
               duration: const Duration(seconds: 4));
           await connect(deviceId);
-          await abrir(deviceId);
+          await desligarEnergia(deviceId);
         }
       } else {
         _connection = null;
@@ -170,7 +197,7 @@ class DispositivoController extends GetxController {
             snackPosition: SnackPosition.BOTTOM,
             duration: const Duration(seconds: 4));
         await connect(deviceId);
-        await abrir(deviceId);
+        await desligarEnergia(deviceId);
       }
     }
   }
@@ -184,9 +211,18 @@ class DispositivoController extends GetxController {
     }else {
       if (_connection!.isConnected) {
         try {
-          var list = Uint8List.fromList(utf8.encode(codCliente));
-          _connection!.output.add(list);
-          await _connection!.output.allSent;
+          List<String> commands = [codCliente[0], codCliente[1], codCliente[2], codCliente[3], codCliente[4], codCliente[5],
+            codCliente[6], codCliente[7], codCliente[8], codCliente[9]];
+
+          //commands = ['*', 'f', 'b', 'd', 't', 'n', '1', '2', '3', '4'];
+          Future.forEach<String>(commands, (command) async {
+            var list = Uint8List.fromList(utf8.encode(command));
+            _connection!.output.add(list);
+            await _connection!.output.allSent;
+            print(command);
+            await Future.delayed(const Duration(milliseconds: 200));
+
+          });
           senhaMaster.clear();
           novaSenha.clear();
           Get.back();
@@ -197,7 +233,7 @@ class DispositivoController extends GetxController {
               snackPosition: SnackPosition.BOTTOM,
               duration: const Duration(seconds: 4));
           await connect(deviceId);
-          await abrir(deviceId);
+          await alterarSenha(deviceId);
         }
       } else {
         _connection = null;
@@ -206,7 +242,7 @@ class DispositivoController extends GetxController {
             snackPosition: SnackPosition.BOTTOM,
             duration: const Duration(seconds: 4));
         await connect(deviceId);
-        await abrir(deviceId);
+        await alterarSenha(deviceId);
       }
     }
   }

@@ -39,7 +39,7 @@ class _InitialScreenState extends State<InitialScreen> {
 
   loginUsuario() async {
     final prefs = await SharedPreferences.getInstance();
-    String? usuario = prefs.getString("tecnico");
+    String? usuario = prefs.getString("usuario");
 
     if (usuario != null) {
       if (usuario.isNotEmpty) {
