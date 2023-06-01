@@ -43,11 +43,11 @@ class _InitialScreenState extends State<InitialScreen> {
 
     if (usuario != null) {
       if (usuario.isNotEmpty) {
-        Map<String, dynamic> userMap =
+        /*Map<String, dynamic> userMap =
             jsonDecode(usuario) as Map<String, dynamic>;
         await userController.automaticSignIn(userMap["id"], userMap["password"]);
         setState(() =>flCarregando = false
-        );
+        );*/
       }else{
         setState(() =>flCarregando = false
         );
@@ -56,6 +56,8 @@ class _InitialScreenState extends State<InitialScreen> {
       setState(() =>flCarregando = false
       );
     }
+    setState(() =>flCarregando = false
+    );
   }
 
   @override

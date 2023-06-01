@@ -54,7 +54,7 @@ class UserController extends GetxController {
           dbController.getDispositivos();
         }
 
-
+        isLoggedIn.value = true;
         _clearControllers();
       }
     } catch (e) {

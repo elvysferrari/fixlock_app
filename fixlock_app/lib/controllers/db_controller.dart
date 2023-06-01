@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:sqflite/sqflite.dart';
 
@@ -8,6 +11,7 @@ import '../models/database/db_table.dart';
 import '../models/dispositivo_model.dart';
 import '../models/dispositivo_registro_model.dart';
 import '../models/regiao_model.dart';
+import '../utils/http_service.dart';
 
 class DBController extends GetxController{
   static DBController instance = Get.find();
@@ -24,6 +28,8 @@ class DBController extends GetxController{
   final RxList<DispositivoModel> _dispositivos = RxList<DispositivoModel>([]);
   List<DispositivoModel> get dispositivos => _dispositivos.value;
   List<DispositivoModel> get dispositivosOrdem => _dispositivos.value..sort((a, b) => a.descricao.compareTo(b.descricao));
+
+  final _http = HttpService();
 
   DBController(){
     _initDB();
@@ -107,9 +113,56 @@ class DBController extends GetxController{
       "dta_reg": model.data,
       "dsc_reg": model.descricao,
       "id_dis": model.dispositivoId,
-      "id_tec": model.tecnicoId,
-      "fl_sync": 0
+      "id_tec": model.tecnicoId
     });
+    if(appController.isDeviceInternetConnected.value) {
+      await enviarApiDispositivoRegistros();
+    }
+  }
+  Future<void> getDispositivoRegistros() async {
+    List condominios = await db.query('dispositivo_registro');
+    condominios.forEach((data) {
+      _condominios.value.add(CondominioModel(
+          id: data["id_con"],
+          nome: data["nom_con"],
+          regiaoId: data["id_reg"]
+      ));
+    });
+    _condominios.refresh();
+  }
+
+  Future<void> enviarApiDispositivoRegistros() async {
+    try{
+      if(db.isOpen) {
+        List _registros = await db.query('dispositivo_registro');
+        List<DispositivoRegistroModel> _listaRegistros = [];
+        _registros.forEach((data) {
+          _listaRegistros.add(DispositivoRegistroModel(
+              descricao: data["dsc_reg"],
+              tecnicoId: data["id_tec"],
+              dispositivoId: data["id_dis"],
+              data: data["dta_reg"]
+          ));
+        });
+
+        if (_listaRegistros.isNotEmpty) {
+          Response response;
+          try {
+            response = await _http.postRequest(
+                '/dispositivo/salvar-registros', jsonEncode(_listaRegistros));
+            if (response.statusCode == 200) {
+              //removo dos dados locais
+              var dbTable = DBTable();
+              await db.execute(dbTable.deletaDispositivoRegistro);
+            }
+          } catch (exception) {
+            print("erro ao enviar");
+          }
+        }
+      }
+    }catch(exception){
+      print(exception.toString());
+    }
   }
 
   Future<void> addDBRegioes(RegiaoModel model) async {
@@ -132,7 +185,7 @@ class DBController extends GetxController{
 
     await db.execute(dbTable.dropTables);
     await db.execute(dbTable.dipositivo);
-    await db.execute(dbTable.dipositivo);
+    await db.execute(dbTable.dispositivoRegistro);
     await db.execute(dbTable.regiao);
     await db.execute(dbTable.condominio);
 

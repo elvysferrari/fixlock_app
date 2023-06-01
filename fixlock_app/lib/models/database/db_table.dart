@@ -17,13 +17,15 @@ class DBTable{
 
   String get dispositivoRegistro => '''
     CREATE TABLE IF NOT EXISTS dispositivo_registro(
-      id INTEGER, 
       dta_reg TEXT, 
       dsc_reg TEXT, 
       id_dis INTEGER, 
-      id_tec INTEGER,
-      fl_sync INTEGER
+      id_tec INTEGER
     );
+  ''';
+
+  String get deletaDispositivoRegistro => '''
+    DELETE FROM dispositivo_registro;
   ''';
 
   String get regiao => '''

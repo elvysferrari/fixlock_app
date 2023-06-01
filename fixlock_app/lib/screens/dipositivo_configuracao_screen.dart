@@ -88,7 +88,7 @@ class _DispositivoConfiguracaoScreenState extends State<DispositivoConfiguracaoS
                     onPressed: () {
                       if(dispositivoController.senhaMaster.text.isNotEmpty) {
                         if(dispositivoController.senhaMaster.text == "fixlock\$2018"){
-                          dispositivoController.alterarSenha(widget.dispositivo.serial);
+                          dispositivoController.alterarSenha(widget.dispositivo.serial, widget.dispositivo.id);
                         }else{
                           Get.snackbar("Dados Inválidos!", "Senha master não confere");
                         }

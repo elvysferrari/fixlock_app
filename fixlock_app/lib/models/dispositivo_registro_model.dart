@@ -2,7 +2,7 @@ class DispositivoRegistroModel{
   late String? descricao;
   late int? dispositivoId;
   late int? tecnicoId;
-  late DateTime? data;
+  late String? data;
 
 
   Map<String, dynamic> toJson() => {
@@ -11,6 +11,13 @@ class DispositivoRegistroModel{
     "tecnicoId": tecnicoId,
     "data": data
   };
+
+  DispositivoRegistroModel.fromJson(Map<String, dynamic> json){
+    descricao = json["descricao"] ?? "";
+    dispositivoId = json["dispositivoId"] ?? 0;
+    tecnicoId = json["tecnicoId"] ?? 0;
+    data = json["data"] ?? "";
+  }
 
   DispositivoRegistroModel({
     required this.descricao,

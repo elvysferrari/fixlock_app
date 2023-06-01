@@ -31,7 +31,7 @@ class _DispositivoScreenState extends State<DispositivoScreen> {
   }
 
   Future<void> desconectar() async {
-    await dispositivoController.disconnect();
+    await dispositivoController.disconnect(widget.dispositivo.id);
   }
 
   @override
@@ -57,9 +57,9 @@ class _DispositivoScreenState extends State<DispositivoScreen> {
                 });
 
                 if(!conectado) {
-                  await dispositivoController.connect(widget.dispositivo.serial);
+                  await dispositivoController.connect(widget.dispositivo.serial, widget.dispositivo.id);
                 } else {
-                  await dispositivoController.disconnect();
+                  await dispositivoController.disconnect(widget.dispositivo.id);
                 }
 
                 await Future.delayed(const Duration(seconds: 5));
@@ -115,7 +115,7 @@ class _DispositivoScreenState extends State<DispositivoScreen> {
                   showLoading = true;
                 });
 
-                await dispositivoController.abrir(widget.dispositivo.serial);
+                await dispositivoController.abrir(widget.dispositivo.serial, widget.dispositivo.id);
 
                 await Future.delayed(const Duration(seconds: 5));
 
@@ -164,8 +164,16 @@ class _DispositivoScreenState extends State<DispositivoScreen> {
               ),
             ),
             GestureDetector(
-              onTap: () {
-                dispositivoController.ligarEnergia(widget.dispositivo.serial);
+              onTap: () async {
+                setState(() {
+                  showLoading = true;
+                });
+                dispositivoController.ligarEnergia(widget.dispositivo.serial, widget.dispositivo.id);
+                await Future.delayed(const Duration(seconds: 5));
+
+                setState(() {
+                  showLoading = false;
+                });
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -351,9 +359,19 @@ class _DispositivoScreenState extends State<DispositivoScreen> {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
-                              onPressed: () {
+                              onPressed: () async {
                                 Get.back();
-                                dispositivoController.desligarEnergia(widget.dispositivo.serial);
+                                setState(() {
+                                  showLoading = true;
+                                });
+                                dispositivoController.desligarEnergia(widget.dispositivo.serial, widget.dispositivo.id);
+
+                                await Future.delayed(const Duration(seconds: 5));
+
+                                setState(() {
+                                  showLoading = false;
+                                });
+
                               },
                               child: const Text(
                                 'SIM',

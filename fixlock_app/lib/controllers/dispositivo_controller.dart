@@ -26,23 +26,7 @@ class DispositivoController extends GetxController {
 
   final _http = HttpService();
 
-  Future<void> salvaRegistro(DispositivoRegistroModel registro) async {
-    Response response;
-    try {
-      response = await _http.postRequest('/dispositivo/adicionar-log', registro.toJson());
-
-      if(response.statusCode == 200){
-
-      }else
-      {
-        //se não tiver conexão com internet salvar no banco local
-      }
-    } catch (e) {
-    }
-  }
-
-
-  Future<void> connect(String deviceId) async {
+  Future<void> connect(String deviceId, int dispositivoId) async {
     var enable = await FlutterBluetoothSerial.instance.isEnabled;
     if(!enable!){
       await FlutterBluetoothSerial.instance.requestEnable();
@@ -50,22 +34,26 @@ class DispositivoController extends GetxController {
     try{
       if(_connection == null) {
         _connection = await BluetoothConnection.toAddress(deviceId).timeout(const Duration(seconds: 10));
+        salvarLogDispositivo("Conectou", dispositivoId);
         Get.snackbar("Sucesso", "Dispositivo conectado", snackPosition: SnackPosition.BOTTOM, duration: const Duration(seconds: 4));
       }else{
+        salvarLogDispositivo("Conectou", dispositivoId);
         Get.snackbar("Sucesso", "Dispositivo conectado", snackPosition: SnackPosition.BOTTOM, duration: const Duration(seconds: 4));
       }
     }
     catch(exception){
       //Get.snackbar("Falha", "Não foi possível conectar", snackPosition: SnackPosition.BOTTOM, duration: const Duration(seconds: 4));
-      //await disconnect();
+      salvarLogDispositivo("Falha ao conectar", dispositivoId);
+      await connect(deviceId, dispositivoId);
     }
   }
 
-  Future<void> disconnect() async {
+  Future<void> disconnect(int dispositivoId) async {
     try {
       _connection?.finish();
       _connection = null;
       await FlutterBluetoothSerial.instance.requestDisable();
+      salvarLogDispositivo("Desconectou", dispositivoId);
       Get.snackbar("Sucesso", "Dispositivo desconectado", snackPosition: SnackPosition.BOTTOM, duration: const Duration(seconds: 4));
     } on Exception catch (e, _) {
       Get.snackbar("Falha", "Não foi possível desconectar", snackPosition: SnackPosition.BOTTOM, duration: const Duration(seconds: 4));
@@ -74,12 +62,12 @@ class DispositivoController extends GetxController {
     }
   }
 
-  Future<void> abrir(String deviceId) async {
+  Future<void> abrir(String deviceId, int dispositivoId) async {
     String? codCliente = "*${userController.userModel.value.clienteCodigo}a";
 
     if(_connection == null) {
       Get.snackbar("Conexão perdida", "Reconectando Dispositivo...", snackPosition: SnackPosition.BOTTOM, duration: const Duration(seconds: 4));
-      await connect(deviceId);
+      await connect(deviceId, dispositivoId);
     }else {
       if (_connection!.isConnected) {
         try {
@@ -95,15 +83,15 @@ class DispositivoController extends GetxController {
 
           });
 
-
+          salvarLogDispositivo("Abriu", dispositivoId);
         } catch (exp) {
           _connection = null;
           await FlutterBluetoothSerial.instance.requestDisable();
           Get.snackbar("Conexão perdida", "Reconectando Dispositivo...",
               snackPosition: SnackPosition.BOTTOM,
               duration: const Duration(seconds: 4));
-          await connect(deviceId);
-          await abrir(deviceId);
+          await connect(deviceId, dispositivoId);
+          await abrir(deviceId, dispositivoId);
         }
       } else {
         _connection = null;
@@ -111,20 +99,20 @@ class DispositivoController extends GetxController {
         Get.snackbar("Conexão perdida", "Reconectando Dispositivo...",
             snackPosition: SnackPosition.BOTTOM,
             duration: const Duration(seconds: 4));
-        await connect(deviceId);
-        await abrir(deviceId);
+        await connect(deviceId, dispositivoId);
+        await abrir(deviceId, dispositivoId);
       }
     }
   }
 
 
-  Future<void> ligarEnergia(String deviceId) async {
+  Future<void> ligarEnergia(String deviceId, int dispositivoId) async {
 
     String? codCliente = "*${userController.userModel.value.clienteCodigo}r";
 
     if(_connection == null) {
       Get.snackbar("Conexão perdida", "Reconectando Dispositivo...", snackPosition: SnackPosition.BOTTOM, duration: const Duration(seconds: 4));
-      await connect(deviceId);
+      await connect(deviceId, dispositivoId);
     }else {
       if (_connection!.isConnected) {
         try {
@@ -137,16 +125,17 @@ class DispositivoController extends GetxController {
             await _connection!.output.allSent;
             print(command);
             await Future.delayed(const Duration(milliseconds: 200));
-
           });
+
+          salvarLogDispositivo("Ligou energia", dispositivoId);
         } catch (exp) {
           _connection = null;
           await FlutterBluetoothSerial.instance.requestDisable();
           Get.snackbar("Conexão perdida", "Reconectando Dispositivo...",
               snackPosition: SnackPosition.BOTTOM,
               duration: const Duration(seconds: 4));
-          await connect(deviceId);
-          await ligarEnergia(deviceId);
+          await connect(deviceId, dispositivoId);
+          await ligarEnergia(deviceId, dispositivoId);
         }
       } else {
         _connection = null;
@@ -154,19 +143,19 @@ class DispositivoController extends GetxController {
         Get.snackbar("Conexão perdida", "Reconectando Dispositivo...",
             snackPosition: SnackPosition.BOTTOM,
             duration: const Duration(seconds: 4));
-        await connect(deviceId);
-        await ligarEnergia(deviceId);
+        await connect(deviceId, dispositivoId);
+        await ligarEnergia(deviceId, dispositivoId);
       }
     }
   }
 
-  Future<void> desligarEnergia(String deviceId) async {
+  Future<void> desligarEnergia(String deviceId, int dispositivoId) async {
 
     String? codCliente = "*${userController.userModel.value.clienteCodigo}d";
 
     if(_connection == null) {
       Get.snackbar("Conexão perdida", "Reconectando Dispositivo...", snackPosition: SnackPosition.BOTTOM, duration: const Duration(seconds: 4));
-      await connect(deviceId);
+      await connect(deviceId, dispositivoId);
     }else {
       if (_connection!.isConnected) {
         try {
@@ -179,16 +168,18 @@ class DispositivoController extends GetxController {
             await _connection!.output.allSent;
             print(command);
             await Future.delayed(const Duration(milliseconds: 200));
-
           });
+
+          salvarLogDispositivo("Desligou energia", dispositivoId);
+
         } catch (exp) {
           _connection = null;
           await FlutterBluetoothSerial.instance.requestDisable();
           Get.snackbar("Conexão perdida", "Reconectando Dispositivo...",
               snackPosition: SnackPosition.BOTTOM,
               duration: const Duration(seconds: 4));
-          await connect(deviceId);
-          await desligarEnergia(deviceId);
+          await connect(deviceId, dispositivoId);
+          await desligarEnergia(deviceId, dispositivoId);
         }
       } else {
         _connection = null;
@@ -196,18 +187,18 @@ class DispositivoController extends GetxController {
         Get.snackbar("Conexão perdida", "Reconectando Dispositivo...",
             snackPosition: SnackPosition.BOTTOM,
             duration: const Duration(seconds: 4));
-        await connect(deviceId);
-        await desligarEnergia(deviceId);
+        await connect(deviceId, dispositivoId);
+        await desligarEnergia(deviceId, dispositivoId);
       }
     }
   }
 
-  Future<void> alterarSenha(String deviceId) async {
+  Future<void> alterarSenha(String deviceId, int dispositivoId) async {
     String? codCliente = "*${userController.userModel.value.clienteCodigo}n${novaSenha.text}";
 
     if(_connection == null) {
       Get.snackbar("Conexão perdida", "Reconectando Dispositivo...", snackPosition: SnackPosition.BOTTOM, duration: const Duration(seconds: 4));
-      await connect(deviceId);
+      await connect(deviceId, dispositivoId);
     }else {
       if (_connection!.isConnected) {
         try {
@@ -223,6 +214,9 @@ class DispositivoController extends GetxController {
             await Future.delayed(const Duration(milliseconds: 200));
 
           });
+
+          salvarLogDispositivo("Senha alterada: ${novaSenha.text}", dispositivoId);
+
           senhaMaster.clear();
           novaSenha.clear();
           Get.back();
@@ -232,8 +226,8 @@ class DispositivoController extends GetxController {
           Get.snackbar("Conexão perdida", "Reconectando Dispositivo...",
               snackPosition: SnackPosition.BOTTOM,
               duration: const Duration(seconds: 4));
-          await connect(deviceId);
-          await alterarSenha(deviceId);
+          await connect(deviceId, dispositivoId);
+          await alterarSenha(deviceId, dispositivoId);
         }
       } else {
         _connection = null;
@@ -241,9 +235,14 @@ class DispositivoController extends GetxController {
         Get.snackbar("Conexão perdida", "Reconectando Dispositivo...",
             snackPosition: SnackPosition.BOTTOM,
             duration: const Duration(seconds: 4));
-        await connect(deviceId);
-        await alterarSenha(deviceId);
+        await connect(deviceId, dispositivoId);
+        await alterarSenha(deviceId, dispositivoId);
       }
     }
+  }
+
+  Future<void> salvarLogDispositivo(String descricao, int dispositivoId) async{
+    DispositivoRegistroModel registro = DispositivoRegistroModel(descricao: descricao, dispositivoId: dispositivoId, tecnicoId: userController.userModel.value.id, data: DateTime.now().toString());
+    await dbController.addDBDispositivoRegistros(registro);
   }
 }

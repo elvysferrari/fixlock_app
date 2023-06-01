@@ -13,10 +13,11 @@ class LoginWidget extends StatefulWidget {
 
 class _LoginWidgetState extends State<LoginWidget> {
   bool _obscureText = true;
+  bool _logando = false;
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
+    return Container(
       margin: const EdgeInsets.all(10),
       child: Wrap(
         children: [
@@ -84,8 +85,10 @@ class _LoginWidgetState extends State<LoginWidget> {
 
             ],
           ),
-
-         Padding(
+          _logando ? const Center(
+            child: CircularProgressIndicator(),
+          )
+              : Padding(
            padding: const EdgeInsets.only(top: 36.0),
            child: Center(
               child: SizedBox(
@@ -98,7 +101,13 @@ class _LoginWidgetState extends State<LoginWidget> {
                   child: const Text('ENTRAR', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                   onPressed: () {
                     if(userController.botaoEntrar()) {
+                      setState(() {
+                        _logando = true;
+                      });
                       userController.signIn();
+                      setState(() {
+                        _logando = false;
+                      });
                     } else {
                       Get.snackbar("Dados Inválidos!", "Por favor preencha os campos Id e Senha");
                     }
