@@ -51,6 +51,17 @@ class DispositivoController extends GetxController {
       return false;
     }
 
+    PermissionStatus bluetoothScan = await Permission.bluetoothScan.request();
+    if(!bluetoothScan.isGranted){
+      Get.snackbar("Autorização Bluetooth Scan negada", "Você tem que autorizar pra continuar");
+      return false;
+    }
+
+    PermissionStatus bluetoothAdvertise = await Permission.bluetoothAdvertise.request();
+    if(!bluetoothAdvertise.isGranted){
+      Get.snackbar("Autorização Bluetooth Advertise negada", "Você tem que autorizar pra continuar");
+      return false;
+    }
     return true;
 
   }
