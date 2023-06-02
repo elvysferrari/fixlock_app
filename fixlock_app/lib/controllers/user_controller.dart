@@ -44,15 +44,7 @@ class UserController extends GetxController {
           "Login efetuado com sucesso!",
         );
 
-        var primeiroLogin = prefs.getBool("primeiroLogin") ?? true;
-        if(primeiroLogin == true) {
-          await importaDadosTecnico();
-          await prefs.setBool("primeiroLogin", false);
-        }else{
-          dbController.getRegiao();
-          dbController.getCondominios();
-          dbController.getDispositivos();
-        }
+        await importaDadosTecnico();
 
         isLoggedIn.value = true;
         _clearControllers();
@@ -70,10 +62,6 @@ class UserController extends GetxController {
     int id = userModel.value.id!;
 
     try {
-
-      Get.snackbar('Importação de dados!',
-        "Seus dados estão sendo importados.",
-      );
 
       response = await _http.getRequest('/tecnico/importa-dados-tecnico/$id');
 

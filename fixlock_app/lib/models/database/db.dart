@@ -22,7 +22,7 @@ class DB {
 
   _initDatabase() async {
     return await openDatabase(
-      join(await getDatabasesPath(), 'fixlock.db'),
+      join(await getDatabasesPath(), 'fixlock_app.db'),
       version: 1,
       onCreate: _onCreate,
     );
@@ -30,9 +30,8 @@ class DB {
 
   _onCreate(db, versao) async {
     var dbTable = DBTable();
-    await db.execute(dbTable.dropTables);
     await db.execute(dbTable.dipositivo);
-    await db.execute(dbTable.dipositivo);
+    await db.execute(dbTable.dispositivoRegistro);
     await db.execute(dbTable.regiao);
     await db.execute(dbTable.condominio);
   }

@@ -42,4 +42,12 @@ class DBTable{
       id_reg INTEGER
     );
   ''';
+
+  String get deletaTodosRegistro => '''
+    DELETE FROM regiao;
+    DELETE FROM condominio;
+    DELETE FROM dispositivo;
+    DELETE FROM dispositivo_registro;
+  ''';
+
 }

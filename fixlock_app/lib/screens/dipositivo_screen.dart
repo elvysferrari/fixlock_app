@@ -15,7 +15,6 @@ class DispositivoScreen extends StatefulWidget {
 
 class _DispositivoScreenState extends State<DispositivoScreen> {
 
-  bool conectado = false;
   bool showLoading = false;
 
   @override
@@ -56,7 +55,7 @@ class _DispositivoScreenState extends State<DispositivoScreen> {
                   showLoading = true;
                 });
 
-                if(!conectado) {
+                if(dispositivoController.connection.value == null) {
                   await dispositivoController.connect(widget.dispositivo.serial, widget.dispositivo.id);
                 } else {
                   await dispositivoController.disconnect(widget.dispositivo.id);
@@ -65,7 +64,6 @@ class _DispositivoScreenState extends State<DispositivoScreen> {
                 await Future.delayed(const Duration(seconds: 5));
 
                 setState(() {
-                  conectado = !conectado;
                   showLoading = false;
                 });
               },
@@ -100,7 +98,7 @@ class _DispositivoScreenState extends State<DispositivoScreen> {
                         ),
                       ),
                       Text(
-                        conectado ? "DESCONECTAR" : "CONECTAR",
+                        dispositivoController.connection.value != null ? "DESCONECTAR" : "CONECTAR",
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
@@ -111,13 +109,16 @@ class _DispositivoScreenState extends State<DispositivoScreen> {
             ),
             GestureDetector(
               onTap: () async {
-                setState(() {
-                  showLoading = true;
-                });
 
-                await dispositivoController.abrir(widget.dispositivo.serial, widget.dispositivo.id);
-
-                await Future.delayed(const Duration(seconds: 5));
+                if(dispositivoController.connection.value != null) {
+                  setState(() {
+                    showLoading = true;
+                  });
+                  await dispositivoController.abrir(widget.dispositivo.serial, widget.dispositivo.id);
+                  await Future.delayed(const Duration(seconds: 5));
+                }else{
+                  Get.snackbar("Dispositivo desconectado", "Conecte o dispositivo primeiro");
+                }
 
                 setState(() {
                   showLoading = false;
@@ -165,12 +166,16 @@ class _DispositivoScreenState extends State<DispositivoScreen> {
             ),
             GestureDetector(
               onTap: () async {
-                setState(() {
-                  showLoading = true;
-                });
-                dispositivoController.ligarEnergia(widget.dispositivo.serial, widget.dispositivo.id);
-                await Future.delayed(const Duration(seconds: 5));
 
+                if(dispositivoController.connection.value != null) {
+                  setState(() {
+                    showLoading = true;
+                  });
+                  dispositivoController.ligarEnergia(widget.dispositivo.serial, widget.dispositivo.id);
+                  await Future.delayed(const Duration(seconds: 5));
+                }else{
+                  Get.snackbar("Dispositivo desconectado", "Conecte o dispositivo primeiro");
+                }
                 setState(() {
                   showLoading = false;
                 });
@@ -261,7 +266,11 @@ class _DispositivoScreenState extends State<DispositivoScreen> {
             ),
             GestureDetector(
               onTap: () {
-                Get.to(() => DispositivoConfiguracaoScreen(dispositivo: widget.dispositivo,));
+                if(dispositivoController.connection.value != null) {
+                  Get.to(() => DispositivoConfiguracaoScreen(dispositivo: widget.dispositivo,));
+                }else{
+                  Get.snackbar("Dispositivo desconectado", "Conecte o dispositivo primeiro");
+                }
               },
               child: Container(
                 decoration: BoxDecoration(

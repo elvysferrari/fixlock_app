@@ -19,12 +19,12 @@ class DrawerMobile extends StatelessWidget {
           Container(
             color: Colors.redAccent,
             height: 80,
-            child: const Column(
+            child: Column(
               children: [
-                SizedBox(height: 16,),
-                Center(child: Text(appName, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),)),
-                SizedBox(height: 16,),
-                Center(child: Text("Bem vindo, Elvys F.", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),)),
+                const SizedBox(height: 16,),
+                const Center(child: Text(appName, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),)),
+                const SizedBox(height: 16,),
+                Center(child: Text(userController.userModel!.value.nome ?? "", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),)),
               ],
             ),
           ),
