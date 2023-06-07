@@ -5,6 +5,7 @@ import 'package:fixlock_app/models/condominio_model.dart';
 import 'package:fixlock_app/models/dispositivo_model.dart';
 import 'package:fixlock_app/models/dispositivo_registro_model.dart';
 import 'package:fixlock_app/models/regiao_model.dart';
+import 'package:fixlock_app/screens/authentication/auth_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' hide Response;
@@ -12,12 +13,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/controllers.dart';
 import '../models/geolocation_model.dart';
 import '../models/user_model.dart';
+import '../screens/home/initial_screen.dart';
 import '../utils/http_service.dart';
 
 class UserController extends GetxController {
   static UserController instance = Get.find();
   final _http = HttpService();
-  RxBool isLoggedIn = false.obs;
+  //RxBool isLoggedIn = false.obs;
 
   TextEditingController id = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -37,8 +39,11 @@ class UserController extends GetxController {
 
       if(response.statusCode == 200){
         userModel.value = UserModel.fromJson(response.data["tecnico"]);
+        await prefs.remove("TOKEN");
+        await prefs.remove("tecnico");
+
         await prefs.setString("TOKEN", "${response.data["token"]}");
-        await prefs.setString("usuario", jsonEncode(userModel.value));
+        await prefs.setString("tecnico", jsonEncode(userModel.value));
 
         Get.snackbar('Sucesso!',
           "Login efetuado com sucesso!",
@@ -46,7 +51,7 @@ class UserController extends GetxController {
 
         await importaDadosTecnico();
 
-        isLoggedIn.value = true;
+        //isLoggedIn.value = true;
         _clearControllers();
       }
     } catch (e) {
@@ -102,9 +107,8 @@ class UserController extends GetxController {
         await prefs.setString("TOKEN", "${response.data["token"]}");
         await prefs.setString("usuario", jsonEncode(userModel.value));
 
-        dbController.getRegiao();
-        dbController.getCondominios();
-        dbController.getDispositivos();
+        importaDadosTecnico();
+        appController.isLoginWidgetDisplayed.value = false;
       }
     } catch (e) {
     }
@@ -143,12 +147,43 @@ class UserController extends GetxController {
     }
   }
 
+  Future<bool> alterarSenha(String novaSenha) async {
+
+    Response response;
+    try {
+      response = await _http.postRequest('/usuario/tecnico-alterar-senha', {
+        'id': this.userModel.value.id,
+        'password': novaSenha
+      });
+
+      if(response.statusCode == 200){
+        if(response.data["successful"] == false) {
+          Get.snackbar('Erro!',
+            "${response.data["message"]}",
+          );
+          return Future.value(false);
+        }else{
+          return Future.value(true);
+        }
+      }else{
+        return Future.value(false);
+      }
+    } catch (e) {
+      Get.snackbar('Erro!',
+        "${e.toString()}!",
+      );
+      return Future.value(false);
+    }
+  }
+
   Future<void> signOut() async {
     userModel.value = UserModel();
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("TOKEN", "");
-    await prefs.setString("usuario", "");
+    await prefs.setString("tecnico", "");
+
+    Get.off(() => AuthenticationScreen());
 
     appController.isLoginWidgetDisplayed.value = true;
   }

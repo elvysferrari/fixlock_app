@@ -27,6 +27,7 @@ dependencies:
   permission_handler: ^10.2.0
   flutter_bluetooth_serial: ^0.4.0
   internet_connection_checker: ^1.0.0+1
+  upgrader: ^7.0.2
 
 flutter_native_splash:
   background_image: assets/images/splash.jpg

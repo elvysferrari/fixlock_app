@@ -156,7 +156,7 @@ class DBController extends GetxController{
               await db.execute(dbTable.deletaDispositivoRegistro);
             }
           } catch (exception) {
-            print("erro ao enviar");
+            print("erro ao enviar ${exception.toString()}");
           }
         }
       }

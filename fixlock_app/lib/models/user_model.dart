@@ -7,6 +7,7 @@ class UserModel {
   late String? clienteCodigo;
   late String? clienteLogo;
   late String? clientePassword;
+  late String? password;
   late int? smartphoneId;
   late bool? ativo;
 
@@ -14,7 +15,10 @@ class UserModel {
 
   Map<String, dynamic> toJson() => {
     "id": id,
-    "nome": nome
+    "nome": nome,
+    "password": password,
+    "clienteLogo": clienteLogo,
+    "clienteNome": clienteNome
   };
 
   UserModel.fromJson(Map<String, dynamic> json){
@@ -25,6 +29,7 @@ class UserModel {
     clienteCodigo = json["clienteCodigo"] ?? "";
     clienteLogo = json["clienteLogo"] ?? "";
     clientePassword = json["clientePassword"] ?? "";
+    password = json["password"] ?? "";
     smartphoneId = json["smartphoneId"] ?? 0;
     ativo = json["ativo"] ?? false;
   }

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../constants/app_constants.dart';
 import '../constants/controllers.dart';
 import '../screens/home/initial_screen.dart';
+import '../screens/usuario/usuario_perfil_screen.dart';
 
 class DrawerMobile extends StatelessWidget {
   const DrawerMobile({Key? key}) : super(key: key);
@@ -36,6 +37,15 @@ class DrawerMobile extends StatelessWidget {
             onTap: () {
               Get.back();
               Get.to(() => const InitialScreen());
+            },
+          ),          ListTile(
+            minLeadingWidth: 6,
+            title: const Text('Perfil'),
+            iconColor: Colors.redAccent,
+            leading: const Icon(Icons.person),
+            onTap: () {
+              Get.back();
+              Get.to(() => const UsuarioPerfilScreen());
             },
           ),ListTile(
             minLeadingWidth: 6,

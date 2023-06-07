@@ -67,7 +67,6 @@ class DispositivoController extends GetxController {
   }
 
   Future<void> connect(String deviceId, int dispositivoId) async {
-
     bool permissoesValidas = await verificaPermissao();
 
     if(permissoesValidas) {
@@ -136,9 +135,9 @@ class DispositivoController extends GetxController {
       _connection = null;
       await FlutterBluetoothSerial.instance.requestDisable();
       salvarLogDispositivo("Desconectou", dispositivoId);
-      Get.snackbar("Sucesso", "Dispositivo desconectado", snackPosition: SnackPosition.BOTTOM, duration: const Duration(seconds: 4));
+      //Get.snackbar("Sucesso", "Dispositivo desconectado", snackPosition: SnackPosition.BOTTOM, duration: const Duration(seconds: 4));
     } on Exception catch (e, _) {
-      Get.snackbar("Falha", "Não foi possível desconectar", snackPosition: SnackPosition.BOTTOM, duration: const Duration(seconds: 4));
+      //Get.snackbar("Falha", "Não foi possível desconectar", snackPosition: SnackPosition.BOTTOM, duration: const Duration(seconds: 4));
     } finally {
       _connection = null;
     }

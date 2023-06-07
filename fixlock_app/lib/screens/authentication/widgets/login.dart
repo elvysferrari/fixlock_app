@@ -96,7 +96,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                 height: 40,
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
-                    primary: AppColors.primary,
+                    foregroundColor: AppColors.primary,
                   ),
                   child: const Text('ENTRAR', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                   onPressed: () {
