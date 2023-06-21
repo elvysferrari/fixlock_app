@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../constants/app_constants.dart';
 import '../constants/controllers.dart';
 import '../screens/home/initial_screen.dart';
+import '../screens/qr_code_screen.dart';
 import '../screens/usuario/usuario_perfil_screen.dart';
 
 class DrawerMobile extends StatelessWidget {
@@ -57,6 +58,15 @@ class DrawerMobile extends StatelessWidget {
               Get.snackbar('Sincronização de dados',
                 "Dados sincronizados com sucesso!",
               );
+            },
+          ),ListTile(
+            minLeadingWidth: 6,
+            title: const Text('Ler QRCode'),
+            iconColor: Colors.redAccent,
+            leading: const Icon(Icons.qr_code),
+            onTap: () async {
+              Get.back();
+              Get.to(() => const QRCodeScreen());
             },
           ),
           ListTile(

@@ -17,4 +17,10 @@ class DispositivoModel{
     serial = json["serial"] ?? "";
     condominioId = json["condominioId"] ?? 0;
   }
+
+  DispositivoModel.fromJsonQRCode(Map<String, dynamic> json){
+    id = json["id"] ?? 0;
+    descricao = json["descricao"] ?? "";
+    serial = json["serial"] ?? "";
+  }
 }
