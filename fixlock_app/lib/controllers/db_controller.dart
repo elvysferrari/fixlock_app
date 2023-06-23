@@ -182,33 +182,29 @@ class DBController extends GetxController{
 
   resetDB() async {
     var dbTable = DBTable();
-    print("resetando");
-    //await db.execute(dbTable.dropTables);
-    //await db.execute(dbTable.deletaTodosRegistro);
-    await db.delete("dispositivo");
-    await db.delete("dispositivo_registro");
-    await db.delete("regiao");
-    await db.delete("condominio");
 
+    if(appController.offLineMode == false) {
+      await db.delete("dispositivo");
+      await db.delete("dispositivo_registro");
+      await db.delete("regiao");
+      await db.delete("condominio");
 
-    await db.execute(dbTable.dipositivo);
-    await db.execute(dbTable.dispositivoRegistro);
-    await db.execute(dbTable.regiao);
-    await db.execute(dbTable.condominio);
+      await db.execute(dbTable.dipositivo);
+      await db.execute(dbTable.dispositivoRegistro);
+      await db.execute(dbTable.regiao);
+      await db.execute(dbTable.condominio);
 
+      _regioes.clear();
+      _regioes.refresh();
 
+      _condominios.clear();
+      _condominios.refresh();
 
-    print("resetado");
-    _regioes.clear();
-    _regioes.refresh();
+      _dispositivos.clear();
+      _dispositivos.refresh();
 
-    _condominios.clear();
-    _condominios.refresh();
-
-    _dispositivos.clear();
-    _dispositivos.refresh();
-
-    userController.importaDadosTecnico();
+      userController.importaDadosTecnico();
+    }
   }
 
 }

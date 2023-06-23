@@ -30,13 +30,10 @@ class UserController extends GetxController {
   Future<void> signIn() async {
     final prefs = await SharedPreferences.getInstance();
 
-    Response response;
-    try {
-      response = await _http.postRequest('/usuario/tecnico-login', {
-        'id': id.value.text,
-        'password': password.value.text,
-      });
-
+    await _http.postRequest('/usuario/tecnico-login', {
+      'id': id.value.text,
+      'password': password.value.text,
+    }).then((response) async {
       if(response.statusCode == 200){
         userModel.value = UserModel.fromJson(response.data["tecnico"]);
         await prefs.remove("TOKEN");
@@ -54,42 +51,62 @@ class UserController extends GetxController {
         //isLoggedIn.value = true;
         _clearControllers();
       }
-    } catch (e) {
-      Get.snackbar('Erro!',
-        "Id ou Senha Inválidos!",
-      );
-    }
+    }).catchError((error) async {
+      if(error.toString().contains("404")) {
+        Get.snackbar('Erro!',
+          "Id ou Senha Inválidos!",
+        );
+      }else{
+        var jsonTecnico = await prefs.getString("tecnico");
+        if (jsonTecnico != null && jsonTecnico != "") {
+          var tecnicoDecode = UserModel.fromJson(jsonDecode(jsonTecnico));
+          if(tecnicoDecode.id.toString() == id.value.text && tecnicoDecode.password == password.value.text) {
+            userModel.value = tecnicoDecode;
+            dbController.getRegiao();
+            dbController.getCondominios();
+            dbController.getDispositivos();
+
+            appController.offLineMode = true;
+          }else{
+            Get.snackbar('Erro!',
+              "Id ou Senha Inválidos!",
+            );
+          }
+        }else{
+          Get.snackbar('Erro!',
+            "Você deve estar conectado a primeira vez na internet!",
+          );
+        }
+      }
+    });
   }
 
   importaDadosTecnico() async {
-    Response response;
-
     int id = userModel.value.id!;
+    await _http.getRequest('/tecnico/importa-dados-tecnico/$id').then((response) {if(response.statusCode == 200){
+      var regioes = (response.data["regioes"] as List)
+          .map((data) => RegiaoModel.fromJson(data))
+          .toList();
 
-    try {
+      var condominios = (response.data["condominios"] as List)
+          .map((data) => CondominioModel.fromJson(data))
+          .toList();
 
-      response = await _http.getRequest('/tecnico/importa-dados-tecnico/$id');
+      var dipositivos = (response.data["dispositivos"] as List)
+          .map((data) => DispositivoModel.fromJson(data))
+          .toList();
 
-      if(response.statusCode == 200){
-        var regioes = (response.data["regioes"] as List)
-            .map((data) => RegiaoModel.fromJson(data))
-            .toList();
+      dbController.addRegiao(regioes);
+      dbController.addCondominio(condominios);
+      dbController.addDispositivos(dipositivos);
 
-        var condominios = (response.data["condominios"] as List)
-            .map((data) => CondominioModel.fromJson(data))
-            .toList();
+    }}).catchError((onError) {
+      dbController.getRegiao();
+      dbController.getCondominios();
+      dbController.getDispositivos();
+      appController.offLineMode = true;
+    });
 
-        var dipositivos = (response.data["dispositivos"] as List)
-            .map((data) => DispositivoModel.fromJson(data))
-            .toList();
-
-        dbController.addRegiao(regioes);
-        dbController.addCondominio(condominios);
-        dbController.addDispositivos(dipositivos);
-
-      }
-    } catch (e) {
-    }
   }
 
   Future<void> automaticSignIn(int id, String password) async {
@@ -178,10 +195,6 @@ class UserController extends GetxController {
 
   Future<void> signOut() async {
     userModel.value = UserModel();
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("TOKEN", "");
-    await prefs.setString("tecnico", "");
 
     Get.off(() => AuthenticationScreen());
 

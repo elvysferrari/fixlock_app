@@ -26,30 +26,32 @@ class RegiaoWidget extends StatelessWidget {
                   blurRadius: 7)
             ]),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(4.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
-                  ),
-                  child: Stack(
-                      children: [
+             ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                  topRight: Radius.circular(15),
+                ),
+                child: Stack(
+                    children: [
 
-                        Image.asset("assets/images/abrir.jpg",
-                          width: double.infinity,
-                        ),
-                      ]
-                  ),
+                      Image.asset("assets/images/abrir.jpg",
+                        width: double.infinity,
+                      ),
+                    ]
                 ),
               ),
-              Text(
-                regiao.nome,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Center(
+                  child: Text(
+                    regiao.nome.toUpperCase(),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
             ],
           ),

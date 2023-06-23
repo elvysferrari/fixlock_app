@@ -1,7 +1,7 @@
 import 'package:fixlock_app/models/dispositivo_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../screens/dipositivo_screen.dart';
+import '../screens/dispositivo_screen.dart';
 
 class DispositivoWidget extends StatelessWidget {
   final DispositivoModel dispositivo;
@@ -46,9 +46,14 @@ class DispositivoWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(
-                dispositivo.descricao,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Center(
+                  child: Text(
+                    dispositivo.descricao.toUpperCase(),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
             ],
           ),

@@ -116,6 +116,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               ),
             ),
          ),
+          appController.offLineMode == true ? const SizedBox(height: 120,child: Center(child: Text('SEM INTERNET', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.redAccent),))) : Container()
         ],
       ),
     );

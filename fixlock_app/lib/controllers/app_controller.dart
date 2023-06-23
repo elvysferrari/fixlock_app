@@ -7,11 +7,12 @@ class AppController extends GetxController{
   static AppController instance = Get.find();
   RxBool isLoginWidgetDisplayed = true.obs;
   RxBool isDeviceInternetConnected = false.obs;
+  bool offLineMode = false;
 
 
   final InternetConnectionChecker customInstance =
   InternetConnectionChecker.createInstance(
-    checkTimeout: const Duration(seconds: 30),
+    checkTimeout: const Duration(seconds: 10),
     checkInterval: const Duration(seconds: 10),
   );
 
@@ -22,10 +23,11 @@ class AppController extends GetxController{
       switch (status) {
         case InternetConnectionStatus.connected:
           isDeviceInternetConnected.value = true;
+          appController.offLineMode = false;
           break;
         case InternetConnectionStatus.disconnected:
           isDeviceInternetConnected.value = false;
-          Get.snackbar("Sem internet", "Conexão com internet perdida");
+          appController.offLineMode = true;
           break;
       }
       isDeviceInternetConnected.refresh();

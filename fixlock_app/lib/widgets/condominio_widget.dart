@@ -46,9 +46,14 @@ class CondominioWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(
-                condominio.nome,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Center(
+                  child: Text(
+                    condominio.nome.toUpperCase(),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
             ],
           ),

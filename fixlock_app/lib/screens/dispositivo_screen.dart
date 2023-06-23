@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../constants/controllers.dart';
 import '../models/dispositivo_model.dart';
-import 'dipositivo_configuracao_screen.dart';
+import 'dispositivo_configuracao_screen.dart';
 
 class DispositivoScreen extends StatefulWidget {
   final DispositivoModel dispositivo;

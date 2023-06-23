@@ -50,9 +50,12 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child:
-                clienteLogo.isNotEmpty ? Image.network(clienteLogo, fit: BoxFit.cover, height: 300,)
+                clienteLogo.isNotEmpty ? Image.network(clienteLogo, fit: BoxFit.cover, height: 250, errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return Image.asset('assets/images/9w.jpg', fit: BoxFit.cover, height: 250);
+                })
                     :
-                Image.asset('assets/images/9w.jpg', fit: BoxFit.cover, height: 300),
+                Image.asset('assets/images/9w.jpg', fit: BoxFit.cover, height: 250),
               ),
               //Image.asset("", width: 200,height: 150,),
               const SizedBox(height: 12),

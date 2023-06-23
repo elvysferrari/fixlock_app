@@ -82,7 +82,7 @@ class _InitialScreenState extends State<InitialScreen> {
         child: Scaffold(
             drawer: const DrawerMobile(),
             appBar:
-                AppBar(title: const Text(appName), backgroundColor: Colors.redAccent),
+                AppBar(title: Text("$appName ${appController.offLineMode == true ? " - OFFLINE" : ""}"), backgroundColor: Colors.redAccent),
             body: const ListaRegiaoWidget(),
         )));
   }

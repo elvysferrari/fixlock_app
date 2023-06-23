@@ -1,7 +1,8 @@
 import 'dart:convert';
 
+import 'package:fixlock_app/constants/controllers.dart';
 import 'package:fixlock_app/models/dispositivo_model.dart';
-import 'package:fixlock_app/screens/dipositivo_screen.dart';
+import 'package:fixlock_app/screens/dispositivo_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -16,6 +17,7 @@ class QRCodeScreen extends StatefulWidget {
 class _QRCodeScreenState extends State<QRCodeScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
+  DispositivoModel dispositivoLido = DispositivoModel(id: 0, descricao: "Não Encontrado", serial: "", condominioId: 0);
   QRViewController? controller;
 
   @override
@@ -35,8 +37,8 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
             child: Center(
               child: (result != null)
                   ? Text(
-                  'Barcode Type: ${result!.format}   Data: ${result!.code}')
-                  : Text('Scan a code'),
+                  'Dispositivo não autorizado: ${dispositivoLido.descricao}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),)
+                  : const Text('Por favor escaneie o QRCode'),
             ),
           )
         ],
@@ -53,9 +55,15 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
           try {
             var jsonStr = result!.code ?? "";
             var jsonResult = jsonDecode(jsonStr);
-            var dispositivo = DispositivoModel.fromJsonQRCode(jsonResult);
-            if(dispositivo.id > 0){
-              Get.off(() => DispositivoScreen(dispositivo: dispositivo));
+            dispositivoLido = DispositivoModel.fromJsonQRCode(jsonResult);
+            if(dispositivoLido.id > 0){
+              //verificar se ele tem acesso
+              var dispositivoEncontrado = dbController.dispositivos.any((d) => d.id == dispositivoLido.id);
+              if(dispositivoEncontrado) {
+                Get.off(() => DispositivoScreen(dispositivo: dispositivoLido));
+              }else{
+                Get.snackbar("Acesso negado", "Você não tem permissão pra acessar esse dispositivo");
+              }
             }
           }catch(exp){
             Get.snackbar("Erro ao ler QRCode", "Não foi possível ler o QRCode");

@@ -21,7 +21,7 @@ class HttpService{
     try{
       response = await _dio.get(endPoint);
     } on DioError catch (e){
-      throw Exception(e.message);
+      throw Exception(e);
     }
     return response;
   }
@@ -31,7 +31,7 @@ class HttpService{
     try{
       response = await _dio.post(endPoint, data: data, options: options);
     } on DioError catch (e){
-      throw Exception(e.message);
+      throw Exception(e);
     }
     return response;
   }
@@ -41,7 +41,7 @@ class HttpService{
     try{
       response = await _dio.put(endPoint, data: data, options: options);
     } on DioError catch (e){
-      throw Exception(e.message);
+      throw Exception(e);
     }
     return response;
   }
