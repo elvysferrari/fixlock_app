@@ -2,8 +2,8 @@ import 'package:fixlock_app/models/dispositivo_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../constants/color_pallet.dart';
-import '../constants/controllers.dart';
+import '../../constants/color_pallet.dart';
+import '../../constants/controllers.dart';
 
 class DispositivoConfiguracaoScreen extends StatefulWidget {
   final DispositivoModel dispositivo;

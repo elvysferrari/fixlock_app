@@ -1,7 +1,7 @@
 import 'package:fixlock_app/models/dispositivo_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../screens/dispositivo_screen.dart';
+import '../screens/dispositivo/dispositivo_screen.dart';
 
 class DispositivoWidget extends StatelessWidget {
   final DispositivoModel dispositivo;

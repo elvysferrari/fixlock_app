@@ -1,3 +1,4 @@
+import 'package:fixlock_app/controllers/chamado_controller.dart';
 import 'package:fixlock_app/screens/home/initial_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +22,7 @@ void main() async {
   Get.put(AppController());
   Get.put(DBController());
   Get.put(DispositivoController());
+  Get.put(ChamadoController());
 
   Intl.defaultLocale = 'pt_BR';
   runApp(const MyApp());

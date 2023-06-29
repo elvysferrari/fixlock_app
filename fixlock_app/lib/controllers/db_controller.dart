@@ -27,6 +27,7 @@ class DBController extends GetxController{
 
   final RxList<DispositivoModel> _dispositivos = RxList<DispositivoModel>([]);
   List<DispositivoModel> get dispositivos => _dispositivos.value;
+
   List<DispositivoModel> get dispositivosOrdem => _dispositivos.value..sort((a, b) => a.descricao.compareTo(b.descricao));
 
   final _http = HttpService();

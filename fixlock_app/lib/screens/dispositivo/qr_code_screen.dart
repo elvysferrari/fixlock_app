@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:fixlock_app/constants/controllers.dart';
 import 'package:fixlock_app/models/dispositivo_model.dart';
-import 'package:fixlock_app/screens/dispositivo_screen.dart';
+import 'package:fixlock_app/screens/dispositivo/dispositivo_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';

@@ -3,8 +3,9 @@ import 'package:get/get.dart';
 
 import '../constants/app_constants.dart';
 import '../constants/controllers.dart';
+import '../screens/chamado/lista_chamado_screen.dart';
 import '../screens/home/initial_screen.dart';
-import '../screens/qr_code_screen.dart';
+import '../screens/dispositivo/qr_code_screen.dart';
 import '../screens/usuario/usuario_perfil_screen.dart';
 
 class DrawerMobile extends StatelessWidget {
@@ -58,6 +59,16 @@ class DrawerMobile extends StatelessWidget {
               Get.snackbar('Sincronização de dados',
                 "Dados sincronizados com sucesso!",
               );
+            },
+
+          ),ListTile(
+            minLeadingWidth: 6,
+            title: const Text('Chamados'),
+            iconColor: Colors.redAccent,
+            leading: const Icon(Icons.call_to_action_outlined),
+            onTap: () async {
+                Get.back();
+                Get.to(() => const ListaChamadoScreen());
             },
           ),ListTile(
             minLeadingWidth: 6,
