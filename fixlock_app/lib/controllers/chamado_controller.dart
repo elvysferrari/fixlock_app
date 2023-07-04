@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:fixlock_app/constants/controllers.dart';
 import 'package:fixlock_app/screens/chamado/lista_chamado_screen.dart';
+import 'package:fixlock_app/utils/http_service_fixservice.dart';
 import 'package:get/get.dart' hide Response;
 
 import '../models/chamado_list_model.dart';
 import '../models/chamado_model.dart';
+import '../models/chamado_notificacao_push.dart';
 import '../models/checklist_original_model.dart';
 import '../screens/home/initial_screen.dart';
 import '../utils/http_service.dart';
@@ -12,6 +14,7 @@ import '../utils/http_service.dart';
 class ChamadoController extends GetxController {
 
   final _http = HttpService();
+  final _httpFixService = HttpServiceFixService();
 
   static ChamadoController instance = Get.find();
 
@@ -91,7 +94,6 @@ class ChamadoController extends GetxController {
 
   Future<ChamadoModel> salvar(ChamadoModel chamado) async {
     Response response;
-    //ChamadoModel chamado = ChamadoModel();
 
     try {
       if(chamado.id == null || chamado.id == 0) {
@@ -106,6 +108,15 @@ class ChamadoController extends GetxController {
           await imagePickController.uploadImages(
               (int.parse(chamadoId)));
           Get.snackbar("Salvar Chamado", "Chamado salvo com sucesso!");
+
+          var chamadoPush = ChamadoNotificacaoPush(id: int.parse(chamadoId), usuarioId: userController.userModel.value.clienteId);
+          try {
+            var chamadoPushJson = chamadoPush.toJson();
+            var responsePush = await _httpFixService.postRequest('/usuario/enviar-notificacao-push', chamadoPushJson);
+          }catch(ex){
+            print(ex);
+          }
+
           Get.offAll(() => const ListaChamadoScreen());
         }
       }else{

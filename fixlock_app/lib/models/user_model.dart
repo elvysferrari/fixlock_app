@@ -11,6 +11,8 @@ class UserModel {
   late int? smartphoneId;
   late bool? ativo;
   late String? firebaseToken;
+  late int? usuarioId;
+
   UserModel({this.id, this.nome});
 
   Map<String, dynamic> toJson() => {
@@ -19,7 +21,8 @@ class UserModel {
     "password": password,
     "clienteLogo": clienteLogo,
     "clienteNome": clienteNome,
-    "firebaseToken": firebaseToken
+    "firebaseToken": firebaseToken,
+    "usuarioId": usuarioId
   };
 
   UserModel.fromJson(Map<String, dynamic> json){
@@ -34,5 +37,6 @@ class UserModel {
     smartphoneId = json["smartphoneId"] ?? 0;
     ativo = json["ativo"] ?? false;
     firebaseToken = json["firebaseToken"] ?? "";
+    usuarioId = json["usuarioId"] ?? 0;
   }
 }
