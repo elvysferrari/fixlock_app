@@ -94,12 +94,29 @@ class ChamadoController extends GetxController {
     //ChamadoModel chamado = ChamadoModel();
 
     try {
-      var chamadoJson =  chamado.toSaveJson();
-      response = await _http.postRequest('/chamado', chamadoJson);
-      if(response.statusCode == 200){
-        chamado =  ChamadoModel.fromJson(response.data);
-        Get.snackbar("Salvar Chamado", "Chamado salvo com sucesso!");
-        Get.off(() => const ListaChamadoScreen());
+      if(chamado.id == null || chamado.id == 0) {
+        if(imagePickController.fotosTiradasAntes.isNotEmpty && imagePickController.fotosTiradasAntes.length < 3){
+          Get.snackbar("Erro ao salvar Chamado", "Tire pelo menos 3 fotos antes");
+          return chamado;
+        }
+        var chamadoJson = chamado.toSaveJson();
+        response = await _http.postRequest('/chamado', chamadoJson);
+        if (response.statusCode == 200) {
+          var chamadoId = response.data["chamadoId"].toString();
+          await imagePickController.uploadImages(
+              (int.parse(chamadoId)));
+          Get.snackbar("Salvar Chamado", "Chamado salvo com sucesso!");
+          Get.offAll(() => const ListaChamadoScreen());
+        }
+      }else{
+        if(!imagePickController.fotosTiradasDepois.isNotEmpty && imagePickController.fotosTiradasDepois.length < 3){
+          Get.snackbar("Erro ao salvar Chamado", "Tire pelo menos 3 fotos depois");
+          return chamado;
+        }
+
+        await imagePickController.uploadImages((int.parse(chamado.id.toString())));
+        Get.snackbar("Salvar Fotos", "Fotos salvas com sucesso!");
+        Get.offAll(() => const ListaChamadoScreen());
       }
     } catch (e) {
       Get.snackbar("Erro ao salvar chamado", e.toString());

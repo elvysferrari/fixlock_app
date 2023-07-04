@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fixlock_app/models/condominio_model.dart';
 import 'package:fixlock_app/models/dispositivo_model.dart';
 import 'package:fixlock_app/models/dispositivo_registro_model.dart';
@@ -32,7 +33,7 @@ class UserController extends GetxController {
 
     await _http.postRequest('/usuario/tecnico-login', {
       'id': id.value.text,
-      'password': password.value.text,
+      'password': password.value.text
     }).then((response) async {
       if(response.statusCode == 200){
         userModel.value = UserModel.fromJson(response.data["tecnico"]);
@@ -48,6 +49,7 @@ class UserController extends GetxController {
 
         await importaDadosTecnico();
 
+        await atualizarTokenFirebase();
         //isLoggedIn.value = true;
         _clearControllers();
       }
@@ -79,6 +81,23 @@ class UserController extends GetxController {
         }
       }
     });
+  }
+
+  atualizarTokenFirebase() async {
+
+    try {
+      final firebaseToken = await FirebaseMessaging.instance.getToken();
+
+      await _http.postRequest('/usuario/atualizar-tecnico-firebase-token', {
+        'id': id.value.text.toString(),
+        'token': firebaseToken.toString()
+      }).then((response) async {
+        print(response);
+      });
+    }catch(exception){
+      print("ERRO");
+      print(exception);
+    }
   }
 
   importaDadosTecnico() async {

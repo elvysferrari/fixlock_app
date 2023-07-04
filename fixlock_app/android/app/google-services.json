@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "801540560335",
+    "project_id": "fixlock-app",
+    "storage_bucket": "fixlock-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:801540560335:android:644208ed30437918186eba",
+        "android_client_info": {
+          "package_name": "com.fixar.fixlock_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "801540560335-2df26ld3ieqp2fhica42mub0gialqlda.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDeE_3FF3boA57PsvlJHlMbo9SlNgPSmI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "801540560335-2df26ld3ieqp2fhica42mub0gialqlda.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

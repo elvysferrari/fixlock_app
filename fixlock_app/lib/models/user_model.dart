@@ -10,7 +10,7 @@ class UserModel {
   late String? password;
   late int? smartphoneId;
   late bool? ativo;
-
+  late String? firebaseToken;
   UserModel({this.id, this.nome});
 
   Map<String, dynamic> toJson() => {
@@ -18,7 +18,8 @@ class UserModel {
     "nome": nome,
     "password": password,
     "clienteLogo": clienteLogo,
-    "clienteNome": clienteNome
+    "clienteNome": clienteNome,
+    "firebaseToken": firebaseToken
   };
 
   UserModel.fromJson(Map<String, dynamic> json){
@@ -32,5 +33,6 @@ class UserModel {
     password = json["password"] ?? "";
     smartphoneId = json["smartphoneId"] ?? 0;
     ativo = json["ativo"] ?? false;
+    firebaseToken = json["firebaseToken"] ?? "";
   }
 }

@@ -1,11 +1,14 @@
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upgrader/upgrader.dart';
 import '../../constants/app_constants.dart';
+import '../../utils/local_notification_service.dart';
 import '../../widgets/drawer_mobile.dart';
 import '../../widgets/lista_regiao_widget.dart';
 import '../authentication/auth_screen.dart';
@@ -22,7 +25,7 @@ class InitialScreen extends StatefulWidget {
 class _InitialScreenState extends State<InitialScreen> {
 
   bool flCarregando = false;
-
+  String token = "";
   @override
   void initState() {
     super.initState();
@@ -31,11 +34,81 @@ class _InitialScreenState extends State<InitialScreen> {
     });
 
     initialization();
+
+
+   /* FirebaseMessaging.instance.getInitialMessage().then(
+          (message) {
+        print("FirebaseMessaging.instance.getInitialMessage");
+        if (message != null) {
+          print("New Notification");
+          // if (message.data['_id'] != null) {
+          //   Navigator.of(context).push(
+          //     MaterialPageRoute(
+          //       builder: (context) => DemoScreen(
+          //         id: message.data['_id'],
+          //       ),
+          //     ),
+          //   );
+          // }
+        }
+      },
+    );
+
+    FirebaseMessaging.onMessage.listen(
+          (message) {
+        print("FirebaseMessaging.onMessage.listen");
+        if (message.notification != null) {
+          print(message.notification!.title);
+          print(message.notification!.body);
+          print("message.data11 ${message.data}");
+          LocalNotificationService().showFlutterNotification(message);
+        }
+      },
+    );
+
+    FirebaseMessaging.onMessageOpenedApp.listen(
+          (message) {
+        print("FirebaseMessaging.onMessageOpenedApp.listen");
+        if (message.notification != null) {
+          print(message.notification!.title);
+          print(message.notification!.body);
+          print("message.data22 ${message.data['_id']}");
+        }
+      },
+    );*/
+    FirebaseMessaging.instance.getInitialMessage().then(
+          (value) => setState(
+            () {
+              print("New Notification");
+              print(value);
+        },
+      ),
+    );
+
+    FirebaseMessaging.onMessage.listen((message){
+      print("onMessage");
+      LocalNotificationService.showFlutterNotification(message);
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+    });
   }
 
   void initialization() async {
     await Future.delayed(const Duration(seconds: 2));
     FlutterNativeSplash.remove();
+
+   /* FirebaseMessaging.instance
+        .getToken(
+        vapidKey:
+        'BBx-3s_M5EQohivK1ur1NgA2Zw0bqnKJUbV8kHIDxHIaYE5meX6ayVZT4DqMEQmugYmdAYV3FdyNWUG7Gcp-qHs')
+        .then((newToken) {
+          setState(() {
+            token = newToken;
+            print("TOKEN: $token");
+          });
+        });*/
   }
 
   loginUsuario() async {

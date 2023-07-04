@@ -6,6 +6,7 @@ import '../constants/controllers.dart';
 import '../screens/chamado/lista_chamado_screen.dart';
 import '../screens/home/initial_screen.dart';
 import '../screens/dispositivo/qr_code_screen.dart';
+import '../screens/usuario/termo_web_screen.dart';
 import '../screens/usuario/usuario_perfil_screen.dart';
 
 class DrawerMobile extends StatelessWidget {
@@ -78,6 +79,15 @@ class DrawerMobile extends StatelessWidget {
             onTap: () async {
               Get.back();
               Get.to(() => const QRCodeScreen());
+            },
+          ),ListTile(
+            minLeadingWidth: 6,
+            title: const Text('Politíca e Privacidade'),
+            iconColor: Colors.redAccent,
+            leading: const Icon(Icons.privacy_tip_outlined),
+            onTap: () async {
+              Get.back();
+              Get.to(() => const TermoWebScreen());
             },
           ),
           ListTile(

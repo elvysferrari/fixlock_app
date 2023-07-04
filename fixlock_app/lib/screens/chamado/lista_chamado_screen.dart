@@ -1,6 +1,7 @@
 import 'package:fixlock_app/constants/controllers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../constants/color_pallet.dart';
 import '../../widgets/chamado_widget.dart';
@@ -21,6 +22,17 @@ class _ListaChamadoScreenState extends State<ListaChamadoScreen> with SingleTick
   void initState() {
     super.initState();
     tabController = TabController(length: 1, vsync: this);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkPermissao();
+    });
+  }
+
+  void _checkPermissao() async {
+    PermissionStatus notification = await Permission.notification.request();
+    if(!notification.isGranted){
+      Get.snackbar("Notificações no APP", "Você tem que aceitar as notificações");
+    }
   }
 
   @override
