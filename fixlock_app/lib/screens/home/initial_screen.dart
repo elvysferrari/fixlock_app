@@ -55,6 +55,7 @@ class _InitialScreenState extends State<InitialScreen> {
   }
 
   void initialization() async {
+
     await Future.delayed(const Duration(seconds: 2));
     FlutterNativeSplash.remove();
 

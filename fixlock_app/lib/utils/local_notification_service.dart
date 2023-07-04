@@ -47,7 +47,7 @@ class LocalNotificationService{
       return;
     }
 
-    print("message: $message");
+    print("message: ${message.toString()}");
 
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;

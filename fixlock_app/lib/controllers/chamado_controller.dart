@@ -109,7 +109,7 @@ class ChamadoController extends GetxController {
               (int.parse(chamadoId)));
           Get.snackbar("Salvar Chamado", "Chamado salvo com sucesso!");
 
-          var chamadoPush = ChamadoNotificacaoPush(id: int.parse(chamadoId), usuarioId: userController.userModel.value.clienteId);
+          var chamadoPush = ChamadoNotificacaoPush(id: int.parse(chamadoId), usuarioId: userController.userModel.value.usuarioId);
           try {
             var chamadoPushJson = chamadoPush.toJson();
             var responsePush = await _httpFixService.postRequest('/usuario/enviar-notificacao-push', chamadoPushJson);
