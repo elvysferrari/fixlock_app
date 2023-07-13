@@ -1,5 +1,6 @@
 import 'package:fixlock_app/constants/controllers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -31,7 +32,7 @@ class _ListaChamadoScreenState extends State<ListaChamadoScreen> with SingleTick
   void _checkPermissao() async {
     PermissionStatus notification = await Permission.notification.request();
     if(!notification.isGranted){
-      Get.snackbar("Notificações no APP", "Você tem que aceitar as notificações");
+      Get.snackbar("Notificações no APP", "Você tem que habilitar as notificações", duration: const Duration(seconds: 5));
     }
   }
 

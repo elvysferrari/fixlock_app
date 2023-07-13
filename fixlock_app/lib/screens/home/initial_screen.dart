@@ -50,25 +50,15 @@ class _InitialScreenState extends State<InitialScreen> {
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
+      //mandar pra tela do chamado
+
     });
   }
 
   void initialization() async {
-
     await Future.delayed(const Duration(seconds: 2));
     FlutterNativeSplash.remove();
 
-   /* FirebaseMessaging.instance
-        .getToken(
-        vapidKey:
-        'BBx-3s_M5EQohivK1ur1NgA2Zw0bqnKJUbV8kHIDxHIaYE5meX6ayVZT4DqMEQmugYmdAYV3FdyNWUG7Gcp-qHs')
-        .then((newToken) {
-          setState(() {
-            token = newToken;
-            print("TOKEN: $token");
-          });
-        });*/
   }
 
   loginUsuario() async {
